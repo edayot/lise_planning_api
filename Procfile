@@ -1,0 +1,1 @@
+web: uvicorn lise_planning_api.internal.app:app --port ${PORT:-8000} --host 0.0.0.0
