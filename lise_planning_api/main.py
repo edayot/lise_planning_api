@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from ics import Calendar
 
-from internal.models import LiseEvent
-from internal.scraping import CreatePlanning
+from lise_planning_api.internal.models import LiseEvent
+from lise_planning_api.internal.scraping import CreatePlanning
 
 import os
 
