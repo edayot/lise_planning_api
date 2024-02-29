@@ -1,7 +1,7 @@
 from typing import Union
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi.responses import StreamingResponse
 from ics import Calendar
 
 from internal.models import LiseEvent
@@ -18,10 +18,11 @@ def read_root():
 
 
 @app.get("/get_ics")
-async def get_ics(
+def get_ics(
     username: str,
     password: str,
 ):
+    # example : /get_ics?username=your_username&password=your_password
     
     planning, events = CreatePlanning().get_all(username, password)
 
@@ -29,12 +30,9 @@ async def get_ics(
     c = Calendar()
     for event_id, event_html in events.items():
         event : LiseEvent = LiseEvent.from_data(event_html, [event for event in planning["events"] if event["id"] == event_id][0])
-        c.events.add(event.to_ics())
-    
-    os.makedirs("__pycache__/planning", exist_ok=True)
-    with open(f"__pycache__/planning/{username}.ics", "w") as my_file:
-        my_file.writelines(c)
+        c.events.add(event.to_ics())    
 
-    return FileResponse(f"__pycache__/planning/{username}.ics", media_type="text/calendar", filename=f"{username}.ics")
-    
-    
+    return StreamingResponse(c.serialize(), media_type="text/calendar", headers={"Content-Disposition": "attachment; filename=planning.ics"})
+
+
+

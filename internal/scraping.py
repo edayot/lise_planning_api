@@ -147,7 +147,6 @@ class CreatePlanning():
         self.go_to_planning()
         logger.info("Getting planning...")
         planning = self.get_planning()
-        os.makedirs("planning", exist_ok=True)
         logger.info("Downloading events...")
         events = {}
         for event in tqdm(planning["events"], desc="Downloading events"):
