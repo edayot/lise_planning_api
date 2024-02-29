@@ -131,7 +131,7 @@ class CreatePlanning():
             headers=HEADERS,
             allow_redirects=True
         )
-        soup = BeautifulSoup(r.text, "xml.parser")
+        soup = BeautifulSoup(r.text, "html.parser")
         for element in soup.find_all("update"):
             if element["id"] == "form:modaleDetail":
                 return element.string
