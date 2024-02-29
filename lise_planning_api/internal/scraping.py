@@ -5,9 +5,6 @@ import os
 from tqdm import tqdm
 import logging
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-
-
 APP_URL = "https://lise.ensam.eu/"
 WANTED_PLANNING = "https://lise.ensam.eu/faces/Planning.xhtml"
 HOME_URL = "https://lise.ensam.eu/faces/MainMenuPage.xhtml"
@@ -134,26 +131,20 @@ class CreatePlanning():
             headers=HEADERS,
             allow_redirects=True
         )
-        soup = BeautifulSoup(r.text, "html.parser")
+        soup = BeautifulSoup(r.text, "xml.parser")
         for element in soup.find_all("update"):
             if element["id"] == "form:modaleDetail":
                 return element.string
         
     def get_all(self, username : str, password : str):
-        logger = logging.getLogger("getplanning")
-        logger.info("Authenticating...")
         self.authenticate(username, password)
-        logger.info("Going to planning...")
         self.go_to_planning()
-        logger.info("Getting planning...")
         planning = self.get_planning()
-        logger.info("Downloading events...")
         events = {}
-        for event in tqdm(planning["events"], desc="Downloading events"):
+        for event in planning["events"]:
             event_id = event["id"]
             event = self.get_event(event_id)
             events[event_id] = event
-        logger.info("Done")
         return planning, events
 
 
