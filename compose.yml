@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["poetry", "run", "app"]
+    entrypoint: ["sh", "-c", "poetry install && exec poetry run app"]
     ports:
       - "8000:8000"
     volumes:

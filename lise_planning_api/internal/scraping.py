@@ -1,9 +1,7 @@
 from bs4 import BeautifulSoup
 import json
 import requests
-import os
-from tqdm import tqdm
-import logging
+
 
 APP_URL = "https://lise.ensam.eu/"
 WANTED_PLANNING = "https://lise.ensam.eu/faces/Planning.xhtml"
@@ -17,14 +15,6 @@ HOME_PLANNING_BUTTON = "form:j_idt806"
 HEADERS = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     "content-type": "application/x-www-form-urlencoded",
-    "sec-ch-ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Linux\"",
-    "sec-fetch-dest": "document",
-    "sec-fetch-mode": "navigate",
-    "sec-fetch-site": "same-origin",
-    "sec-fetch-user": "?1",
-    "upgrade-insecure-requests": "1"
 }
 
 
