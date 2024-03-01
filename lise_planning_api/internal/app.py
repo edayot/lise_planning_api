@@ -16,8 +16,19 @@ import os
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
+@app.get(
+    "/",
+    responses={
+        200: {
+            "description": "Success message.",
+            
+        }
+    }
+)
+def ping() -> str:
+    """
+    A ping endpoint to check if the API is up.
+    """
     return "A simple API to create an ICS file from a Lise event."
 
 
@@ -27,10 +38,55 @@ class CachedResponse(BaseModel):
 
 cache: Dict[str, CachedResponse] = {}
 
-@app.get("/{username}")
+@app.get(
+    "/{username}",
+    responses={
+        200: {
+            "content": {
+                "text/calendar": {
+                    "example": """BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:Access-A-Ride Pickup
+DTSTART;TZID=America/New_York:20130802T103400
+DTEND;TZID=America/New_York:20130802T110400
+LOCATION:1000 Broadway Ave.\, Brooklyn
+DESCRIPTION: Access-A-Ride to 900 Jay St.\, Brooklyn
+STATUS:CONFIRMED
+SEQUENCE:3
+BEGIN:VALARM
+TRIGGER:-PT10M
+DESCRIPTION:Pickup Reminder
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Access-A-Ride Pickup
+DTSTART;TZID=America/New_York:20130802T200000
+DTEND;TZID=America/New_York:20130802T203000
+LOCATION:900 Jay St.\, Brooklyn
+DESCRIPTION: Access-A-Ride to 1000 Broadway Ave.\, Brooklyn
+STATUS:CONFIRMED
+SEQUENCE:3
+BEGIN:VALARM
+TRIGGER:-PT10M
+DESCRIPTION:Pickup Reminder
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+"""
+                }
+            },
+            "description": "ICS file for the user's planning."
+        }
+    }
+)
 def get_ics(username: str, password: str):
-    # example : /username?password=1234
-
+    """
+    Get the ICS file for the user's planning.
+    """
     # Check cache
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     cache_key = f"{username}:{hashed_password}"

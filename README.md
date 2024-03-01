@@ -6,7 +6,7 @@ Cet API permet à l'utilsateur d'exporter les données de Lise.
 ## Utilisation
 
 
-### APi de Lise
+### API de Lise
 Lise met à disposition cette route API : `https://lise.ensam.eu/ical_apprenant/2021-XXXX`
 
 Elle permet d'exporter le calendrier sur lise de la semaine en cours et de la semaine d'après au format `.ics`. Elle peut ensuite être intégrée à Google Calendar.
