@@ -10,6 +10,7 @@ import hashlib
 
 from lise_planning_api.internal.models import LiseEvent
 from lise_planning_api.internal.scraping import CreatePlanning
+from argon2 import PasswordHasher
 
 import os
 
@@ -35,8 +36,16 @@ def ping() -> str:
 class CachedResponse(BaseModel):
     content: Any
     timestamp: datetime
+    password_hash: str
 
 cache: Dict[str, CachedResponse] = {}
+
+def verify_password(password: str, password_hash: str, ph : PasswordHasher) -> bool:
+    try:
+        return ph.verify(password_hash, password)
+    except:
+        return False
+
 
 @app.get(
     "/{username}",
@@ -87,14 +96,16 @@ def get_ics(username: str, password: str, formatting_desc: bool = False):
     """
     Get the ICS file for the user's planning.
     """
-    # Check cache
-    hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    cache_key = f"{username}:{hashed_password}"
-    if cache_key in cache:
-        cached_response = cache[cache_key]
+    ph = PasswordHasher()
+    if username in cache:
+        cached_response = cache[username]
         if datetime.now() - cached_response.timestamp < timedelta(minutes=10):
-            return StreamingResponse(cached_response.content, media_type="text/calendar", headers={"Content-Disposition": "attachment; filename=planning.ics"})
-
+            if verify_password(password, cached_response.password_hash, ph):
+                return StreamingResponse(cached_response.content, media_type="text/calendar", headers={"Content-Disposition": "attachment; filename=planning.ics"})
+            else:
+                del cache[username]
+        else:
+            del cache[username]
 
     # Get the planning
     planning, events = CreatePlanning().get_all(username, password)
@@ -104,6 +115,6 @@ def get_ics(username: str, password: str, formatting_desc: bool = False):
         c.events.add(event.to_ics())    
 
     serialized_content = c.serialize()
-    cache[cache_key] = CachedResponse(content=serialized_content, timestamp=datetime.now())
+    cache[username] = CachedResponse(content=serialized_content, timestamp=datetime.now(), password_hash=ph.hash(password))
 
     return StreamingResponse(serialized_content, media_type="text/calendar", headers={"Content-Disposition": "attachment; filename=planning.ics"})
