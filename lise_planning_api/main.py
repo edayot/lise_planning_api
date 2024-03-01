@@ -8,7 +8,7 @@ def main():
     uvicorn.run(
         "lise_planning_api.internal.app:app", 
         host="0.0.0.0", 
-        port=8000, 
+        port=int(os.getenv("PORT", 8000)),
         log_level="info", 
         reload=os.getenv("DEBUG", False) == "True",
     )
