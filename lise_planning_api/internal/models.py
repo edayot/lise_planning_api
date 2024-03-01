@@ -3,6 +3,14 @@ from ics import Event, Attendee
 from datetime import datetime
 from bs4 import BeautifulSoup
 
+
+GLOBAL_INFO_FORM = "form:j_idt154_content"
+RESSOURCES_FORM = "form:onglets:j_idt166_data"
+INTERVENANTS_FORM = "form:onglets:j_idt174_data"
+APPRENANTS_FORM = "form:onglets:apprenantsTable_data"
+GROUPES_FORM = "form:onglets:j_idt213_data"
+COURS_FORM = "form:onglets:j_idt221_data"
+
 @dataclass
 class Person:
     nom : str
@@ -110,8 +118,8 @@ class LiseEvent:
 
 
     def _get_event_global_info(soup : BeautifulSoup) -> dict:
-        # find soup with id="form:j_idt153_content"
-        souf_info = soup.find("div", {"id": "form:j_idt153_content"})
+        # find soup with id=GLOBAL_INFO_FORM
+        souf_info = soup.find("div", {"id": GLOBAL_INFO_FORM})
         # find all infos
         for soup_info in souf_info.find_all("div", {"class": "ui-grid-row"}):
             # find the label
@@ -139,7 +147,7 @@ class LiseEvent:
         }
 
     def _get_event_ressources(soup : BeautifulSoup) -> list[Ressource]:
-        soup_ressources = soup.find("tbody", {"id": "form:onglets:j_idt165_data"})
+        soup_ressources = soup.find("tbody", {"id": RESSOURCES_FORM})
         ressources = []
         for soup_ressource in soup_ressources.find_all("tr"):
             tds = soup_ressource.find_all("td")
@@ -163,13 +171,13 @@ class LiseEvent:
         return persons
 
     def _get_event_intervenants(soup : BeautifulSoup) -> list[Person]:
-        return LiseEvent._get_event_person(soup, "form:onglets:j_idt173_data")
+        return LiseEvent._get_event_person(soup, INTERVENANTS_FORM)
     
     def _get_event_apprenants(soup : BeautifulSoup) -> list[Person]:
-        return LiseEvent._get_event_person(soup, "form:onglets:apprenantsTable_data")
+        return LiseEvent._get_event_person(soup, APPRENANTS_FORM)
     
     def _get_event_groupes(soup : BeautifulSoup) -> list[Group]:
-        soup_groupes = soup.find("tbody", {"id": "form:onglets:j_idt212_data"})
+        soup_groupes = soup.find("tbody", {"id": GROUPES_FORM})
         groupes = []
         for soup_groupe in soup_groupes.find_all("tr"):
             tds = soup_groupe.find_all("td")
@@ -179,7 +187,7 @@ class LiseEvent:
         return groupes
 
     def _get_event_cours(soup : BeautifulSoup) -> list[Cours]:
-        soup_cours = soup.find("tbody", {"id": "form:onglets:j_idt220_data"})
+        soup_cours = soup.find("tbody", {"id": COURS_FORM})
         cours = []
         for soup_cour in soup_cours.find_all("tr"):
             tds = soup_cour.find_all("td")

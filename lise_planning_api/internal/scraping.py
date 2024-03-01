@@ -7,9 +7,11 @@ APP_URL = "https://lise.ensam.eu/"
 WANTED_PLANNING = "https://lise.ensam.eu/faces/Planning.xhtml"
 HOME_URL = "https://lise.ensam.eu/faces/MainMenuPage.xhtml"
 
-PLANNING_FORM = "form:j_idt118"
-PLANNING_FORM_SECOND = "form:j_idt244"
-HOME_PLANNING_BUTTON = "form:j_idt806"
+PLANNING_FORM = "form:j_idt119"
+PLANNING_FORM_SECOND = "form:j_idt245"
+HOME_PLANNING_BUTTON = "form:j_idt829"
+
+HOME_DUMMY_FORM = "form:j_idt773"
 
 
 HEADERS = {
@@ -59,7 +61,7 @@ class CreatePlanning():
             'form:largeurDivCenter': '581',
             'form:idInit': self.idinit,
             'form:sauvegarde': '',
-            'form:j_idt840_input': '44323',
+            f'{HOME_DUMMY_FORM}_input': '44323',
             'javax.faces.ViewState': self.viewstate,
             HOME_PLANNING_BUTTON: HOME_PLANNING_BUTTON
         }
