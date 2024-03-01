@@ -221,6 +221,8 @@ class LiseEvent:
 
         groupes_string = "\n".join([f"{g}" for g in self.groupe])
 
+        apprenants_string = "\n".join([f"{a.nom} {a.prenom}" for a in self.apprenant])
+
         return f"""{bold("Intervenants : ")}{", ".join([f"{i.nom} {i.prenom}" for i in self.intervenant])}
 {bold("Type : ")}{self.type} {"(Examen)" if self.is_exam else ""}
 {bold("Statut : ")}{self.status}
@@ -232,4 +234,7 @@ class LiseEvent:
 
 {bold("Groupes :")}
 {groupes_string}
+
+{bold("Apprenants :")}
+{apprenants_string}
 """
