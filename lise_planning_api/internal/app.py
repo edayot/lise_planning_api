@@ -83,7 +83,7 @@ END:VCALENDAR
         }
     }
 )
-def get_ics(username: str, password: str):
+def get_ics(username: str, password: str, formatting_desc: bool = False):
     """
     Get the ICS file for the user's planning.
     """
@@ -100,7 +100,7 @@ def get_ics(username: str, password: str):
     planning, events = CreatePlanning().get_all(username, password)
     c = Calendar()
     for event_id, event_html in events.items():
-        event: LiseEvent = LiseEvent.from_data(event_html, [event for event in planning["events"] if event["id"] == event_id][0])
+        event: LiseEvent = LiseEvent.from_data(event_html, [event for event in planning["events"] if event["id"] == event_id][0], formatting_desc=formatting_desc)
         c.events.add(event.to_ics())    
 
     serialized_content = c.serialize()
