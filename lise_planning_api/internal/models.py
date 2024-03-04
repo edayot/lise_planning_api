@@ -212,10 +212,12 @@ class LiseEvent:
 
         return e
     
+    def bold(self, x):
+        if self.formatting_desc:
+            return f"<b>{x}</b>"
+        return x
+    
     def get_description(self):
-
-        
-        bold = lambda x: f"<b>{x}</b>" if self.formatting_desc else lambda x: x
 
         cours_string = "\n".join([f"{c}" for c in self.cours])
 
@@ -223,18 +225,18 @@ class LiseEvent:
 
         apprenants_string = "\n".join([f"{a.nom} {a.prenom}" for a in self.apprenant])
 
-        return f"""{bold("Intervenants : ")}{", ".join([f"{i.nom} {i.prenom}" for i in self.intervenant])}
-{bold("Type : ")}{self.type} {"(Examen)" if self.is_exam else ""}
-{bold("Statut : ")}{self.status}
-{bold("Description : ")}{self.description}
-{bold("Apprenants : ")}{len(self.apprenant)}
+        return f"""{self.bold("Intervenants : ")}{", ".join([f"{i.nom} {i.prenom}" for i in self.intervenant])}
+{self.bold("Type : ")}{self.type} {"(Examen)" if self.is_exam else ""}
+{self.bold("Statut : ")}{self.status}
+{self.bold("Description : ")}{self.description}
+{self.bold("Apprenants : ")}{len(self.apprenant)}
 
-{bold("Cours :")}
+{self.bold("Cours :")}
 {cours_string}
 
-{bold("Groupes :")}
+{self.bold("Groupes :")}
 {groupes_string}
 
-{bold("Apprenants :")}
+{self.bold("Apprenants :")}
 {apprenants_string}
 """
